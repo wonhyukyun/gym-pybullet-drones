@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="large_camera_turret">
+
+	<link name="mobile_link">
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="1.67 2.67 0.67" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="1.67 2.67 0.67" />
+			</geometry>
+			<material name="red" />
+		</visual>
+		<inertial>
+			<mass value="1000" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<inertia ixx="170" ixy="0" ixz="0" iyy="72.5" iyz="0" izz="222.5" />
+		</inertial>
+		<!-- Left ear -->
+		<collision>
+			<origin xyz="0 -1 1.5" rpy="0 0 0" />
+			<geometry>
+				<box size="1.33 0.67 2.33" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 -1 1.5" rpy="0 0 0" />
+			<geometry>
+				<box size="1.33 0.67 2.33" />
+			</geometry>
+			<material name="red" />
+		</visual>
+		<inertial>
+			<mass value="30" />
+			<origin xyz="0 -1 1.5" rpy="0 0 0" />
+			<inertia ixx="132.5" ixy="0" ixz="0" iyy="162.5" iyz="0" izz="5" />
+		</inertial>
+		<!-- Right ear -->
+		<collision>
+			<origin xyz="0 1 1.5" rpy="0 0 0" />
+			<geometry>
+				<box size="1.33 0.67 2.33" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 1 1.5" rpy="0 0 0" />
+			<geometry>
+				<box size="1.33 0.67 2.33" />
+			</geometry>
+			<material name="red" />
+		</visual>
+		<inertial>
+			<mass value="30" />
+			<origin xyz="0 1 1.5" rpy="0 0 0" />
+			<inertia ixx="132.5" ixy="0" ixz="0" iyy="162.5" iyz="0" izz="5" />
+		</inertial>
+	</link>
+
+
+	<link name="camera_link">
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="2 1.33 1.33" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<geometry>
+				<box size="2 1.33 1.33" />
+			</geometry>
+			<material name="red" />
+		</visual>
+		<inertial>
+			<mass value="20" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<inertia ixx="80" ixy="0" ixz="0" iyy="130" iyz="0" izz="130" />
+		</inertial>
+	</link>
+
+	<joint name="camera_joint" type="continuous">
+		<axis xyz="0 1 0" />
+		<origin xyz="0 0 2.33" rpy="0 0 0" />
+		<parent link="mobile_link" />
+		<child link="camera_link" />
+	</joint>
+
+	<link name="barrel_link">
+		<collision>
+			<origin xyz="0 0 0.25" rpy="0 0 0" />
+			<geometry>
+				<cylinder length="0.5" radius="0.033" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 0 0.25" rpy="0 1.57 0" />
+			<geometry>
+				<cylinder length="0.5" radius="0.033" />
+			</geometry>
+			<material name="black">
+				<color rgba="0 0 0 1" />
+			</material>
+		</visual>
+		<inertial>
+			<mass value="5" />
+			<origin xyz="0 0 0.25" rpy="0 0 0" />
+			<inertia ixx="0.94" ixy="0" ixz="0" iyy="0.94" iyz="0" izz="0.03" />
+		</inertial>
+		<!-- Bullet firing mechanism -->
+		<collision>
+			<origin xyz="0 0.5 0.25" rpy="0 0 0" />
+			<geometry>
+				<cylinder length="0.2" radius="0.01" />
+			</geometry>
+		</collision>
+		<visual>
+			<origin xyz="0 0.5 0.25" rpy="0 0 0" />
+			<geometry>
+				<cylinder length="0.2" radius="0.01" />
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1" />
+			</material>
+		</visual>
+	</link>
+
+	<joint name="barrel_joint" type="fixed">
+		<origin xyz="1 0 0" rpy="0 0 0" />
+		<parent link="camera_link" />
+		<child link="barrel_link" />
+	</joint>
+
+	<!-- Transmissions -->
+	<transmission name="tran1">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="mobileBase_joint">
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor1">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+
+	<transmission name="tran2">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="camera_joint">
+			<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+		</joint>
+		<actuator name="motor2">
+			<hardwareInterface>PositionJointInterface</hardwareInterface>
+			<mechanicalReduction>1</mechanicalReduction>
+		</actuator>
+	</transmission>
+
+	<!-- camera plugin -->
+	
+</robot>
